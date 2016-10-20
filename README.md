@@ -1,1 +1,1 @@
-# msys2-devops
+# yad (Yet Another Devops)
