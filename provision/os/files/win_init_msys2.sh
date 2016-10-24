@@ -11,9 +11,6 @@ if ! echo $PATH | /bin/grep -q /usr/bin; then
   export PATH=/usr/bin:$PATH
 fi
 
-if [ -z "$SSHD_USER" ]; then export SSHD_USER=sshd_server; fi
-if [ -z "$SSHD_PASSWORD" ]; then export SSHD_PASSWORD="$(tr -dc 'a-zA-Z0-9' < /dev/urandom | dd count=14 bs=1 2>/dev/null)"; fi
-
 #MSYSTEM=MSYS || MINGW32 || MINGW64
 if [ -z "$MSYSTEM" ]; then export MSYSTEM=MINGW32; fi
 
@@ -32,12 +29,16 @@ chmod a+w /etc/ssh/sshd_config
 
 sed -i -e 's/#\?StrictModes \(yes\|no\)/StrictModes no/i' /etc/ssh/sshd_config
 sed -i -e 's/#\?PubkeyAuthentication \(yes\|no\)/PubkeyAuthentication yes/i' /etc/ssh/sshd_config
+sed -i -e 's/#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/i' /etc/ssh/sshd_config
 sed -i -e 's/#\?PermitUserEnvironment \(yes\|no\)/PermitUserEnvironment yes/i' /etc/ssh/sshd_config
 sed -i -e 's/#\?UseDNS \(yes\|no\)/UseDNS no/i' /etc/ssh/sshd_config
 sed -i -e 's/#\?MaxAuthTries \([0-9]*\)/MaxAuthTries 10/i' /etc/ssh/sshd_config
 sed -i -e 's/#\?UsePrivilegeSeparation \(.*\)/UsePrivilegeSeparation no/i' /etc/ssh/sshd_config
 
 chmod go-w /etc/ssh/sshd_config
+
+echo "==> Setting HISTCONTROL"
+grep -q -E "^HISTCONTROL=" /etc/bash.bashrc || (echo $'\n'"HISTCONTROL=ignoreboth"$'\n' >> /etc/bash.bashrc)
 
 #echo "==> Disabling account password expiration for user $USERNAME"
 #echo '' | wmic USERACCOUNT WHERE "Name='$USERNAME'" set PasswordExpires=FALSE
@@ -46,7 +47,7 @@ chmod go-w /etc/ssh/sshd_config
 
 PRIV_USER=sshd_server
 PRIV_NAME="Privileged user for sshd"
-PRIV_PASSWORD="$(tr -dc 'a-zA-Z0-9' < /dev/urandom | dd count=14 bs=1 2>/dev/null)"
+PRIV_PASSWORD="$(tr -dc 'a-zA-Z0-9' < /dev/urandom | dd count=32 bs=1 2>/dev/null)"
 UNPRIV_USER=sshd
 UNPRIV_NAME="Privilege separation user for sshd"
 EMPTY_DIR=/var/empty
