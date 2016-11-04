@@ -3,6 +3,7 @@ build:
   pull: true
   shell: msys$$arch
   commands:
+    - echo testing
     - whoami
 
 matrix:
