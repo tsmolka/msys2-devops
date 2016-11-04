@@ -1,0 +1,11 @@
+build:
+  image: teaci/msys$$arch
+  pull: true
+  shell: msys$$arch
+  commands:
+    - whoami
+
+matrix:
+  arch:
+    - 64
+    - 32
