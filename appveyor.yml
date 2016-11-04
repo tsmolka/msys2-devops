@@ -1,4 +1,3 @@
 build_script:
-    - echo test
-    - whoami
-    - dir C:
+    - C:\msys64\usr\bin\pacman --noconfirm --sync --refresh --refresh --sysupgrade --sysupgrade
+    - C:\msys64\usr\bin\bash --login -c "$(cygpath ${APPVEYOR_BUILD_FOLDER})/ci-build.sh"
