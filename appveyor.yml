@@ -1,4 +1,4 @@
 build_script:
     - echo test
     - whoami
-    - dir C:/
+    - dir C:
